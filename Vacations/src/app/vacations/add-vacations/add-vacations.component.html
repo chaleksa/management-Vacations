@@ -1,0 +1,144 @@
+<form (ngSubmit)="onSubmit(f)" #f="ngForm">
+  <div class="add-workers-out">
+
+    <div fxLayoutAlign="center" class="workers-search-block" *ngIf="isAddMode; else worker">
+      <mat-card fxFlex.gt-sm="60%" fxFlex.sm="90%">
+
+        <mat-card-subtitle>
+          Worker Search *
+        </mat-card-subtitle>
+
+        <mat-card-content fxLayout="row" class="search-input-card-content">
+          <mat-icon class="search-input-icon">search</mat-icon>
+          <ng-select class="ng-select-worker" 
+          [items]="workersSource" 
+          bindLabel="name" 
+          bindValue="id" 
+          ngModel name="workerId" 
+          id="workerId" 
+          required>
+          </ng-select>
+        </mat-card-content>
+
+      </mat-card>
+    </div>
+
+    <ng-template #worker>
+      <div fxLayoutAlign="center" class="edit-worker">
+        <mat-card fxFlex.gt-sm="60%" fxFlex.sm="90%">
+
+          <mat-card-subtitle>
+            Worker
+          </mat-card-subtitle>
+
+          <mat-card-content fxLayout="row" class="edit-worker-name">
+            {{ workerName }}
+          </mat-card-content>
+
+        </mat-card>
+      </div>
+    </ng-template>
+
+    <div fxLayoutAlign="center" class="add-workers-out">
+      <mat-card fxFlex.gt-sm="60%" fxFlex.sm="90%">
+
+        <mat-card-subtitle>
+          Dates
+        </mat-card-subtitle>
+
+        <mat-card-content *ngIf="isAddMode; else workerDates">
+          <div fxLayoutGap="20px" fxLayout.gt-sm="row" fxLayout.lt-sm="column">
+           
+            <mat-form-field color="primary">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="workerVacationStart" ngModel name="start" required>
+              <mat-datepicker-toggle matSuffix [for]="workerVacationStart"></mat-datepicker-toggle>
+              <mat-datepicker #workerVacationStart></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field color="primary">
+              <mat-label>End Date</mat-label>
+              <input matInput [matDatepicker]="workerVacationEnd" ngModel name="end" required>
+              <mat-datepicker-toggle matSuffix [for]="workerVacationEnd"></mat-datepicker-toggle>
+              <mat-datepicker #workerVacationEnd></mat-datepicker>
+            </mat-form-field>
+
+          </div>
+        </mat-card-content>
+
+        <ng-template #workerDates>
+          <mat-card-content>
+            <div fxLayoutGap="20px" fxLayout.gt-sm="row" fxLayout.lt-sm="column">
+              
+              <mat-form-field color="primary">
+                <mat-label>Start Date</mat-label>
+                <input matInput 
+                [matDatepicker]="workerVacationStart" 
+                name="start" 
+                required 
+                [(ngModel)]="vacationStart">
+                <mat-datepicker-toggle matSuffix [for]="workerVacationStart"></mat-datepicker-toggle>
+                <mat-datepicker #workerVacationStart></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field color="primary">
+                <mat-label>End Date</mat-label>
+                <input matInput 
+                [matDatepicker]="workerVacationEnd" 
+                ngModel 
+                name="end" 
+                required 
+                [(ngModel)]="vacationEnd">
+                <mat-datepicker-toggle matSuffix [for]="workerVacationEnd"></mat-datepicker-toggle>
+                <mat-datepicker #workerVacationEnd></mat-datepicker>
+              </mat-form-field>
+
+            </div>
+          </mat-card-content>
+        </ng-template>
+      </mat-card>
+    </div>
+
+    <div fxLayoutAlign="center" class="add-workers-out">
+      <mat-card fxFlex.gt-sm="60%" fxFlex.sm="90%">
+
+        <mat-card-subtitle>Notes</mat-card-subtitle>
+
+        <mat-card-content>
+          <mat-form-field class="activity-notes-formfiled">
+            <textarea class="activity-notes-textarea" 
+            placeholder="Notes" 
+            matInput 
+            matTextareaAutosize="true"
+            matAutosizeMinRows="2" 
+            [(ngModel)]="vacationNotes"
+            name="notes"></textarea>
+          </mat-form-field>
+        </mat-card-content>
+
+      </mat-card>
+    </div>
+
+    <div fxLayoutAlign="center" class="add-worker-buttons">
+      <div class="button-group" fxLayoutAlign="space-between" fxLayout="row" fxFlex.gt-sm="60%" fxFlex.sm="90%">
+        
+        <div class="cancel-button">
+          <button mat-raised-button color="basic" (click)="return()" type="button">
+            Cancel
+          </button>
+        </div>
+
+        <div class="submit-buttons">
+          <button mat-raised-button color="warn" *ngIf="!isAddMode" (click)="delete()">
+            Remove
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="!f.valid" (click)="return()">
+            Save
+          </button>
+        </div>
+        
+      </div>
+    </div>
+
+  </div>
+</form>

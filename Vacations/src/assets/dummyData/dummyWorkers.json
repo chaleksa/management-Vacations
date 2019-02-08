@@ -1,0 +1,22 @@
+[
+  {
+    "id": "D1",
+    "name": "Richard Gallardo",
+    "resourceType": "driver"
+  },
+  {
+    "id": "D2",
+    "name": "Johnathan Thibodeaux",
+    "resourceType": "driver"
+  },
+  {
+    "id": "L1",
+    "name": "Russell Rader",
+    "resourceType": "laborer"
+  },
+  {
+    "id": "L2",
+    "name": "Robert Angel",
+    "resourceType": "laborer"
+  }
+]
