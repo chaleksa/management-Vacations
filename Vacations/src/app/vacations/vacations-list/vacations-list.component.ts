@@ -25,7 +25,7 @@ export class VacationsListComponent implements OnInit {
 
   ELEMENT_DATA = [];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private dataService: DataService, private _router: Router) { }
 
@@ -53,11 +53,11 @@ export class VacationsListComponent implements OnInit {
 
   onRowClicked(row) {
     this.rowChoosen = row;
-    this._router.navigate(["vacations/add", 0, this.rowChoosen.id])
+    this._router.navigate(['vacations/add', 0, this.rowChoosen.id]);
   }
 
   openAddForm() {
-    this._router.navigate(["vacations/add", 1])
+    this._router.navigate(['vacations/add', 1]);
   }
 
 }
