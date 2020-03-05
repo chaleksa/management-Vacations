@@ -23,7 +23,7 @@ export class AddVacationsComponent implements OnInit {
   vacationEnd;
   vacationNotes;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private dataService: DataService, route: ActivatedRoute, private _location: Location) {
     this.state = parseInt(route.snapshot.params['state']);
