@@ -53,11 +53,11 @@ export class VacationsListComponent implements OnInit {
 
   onRowClicked(row) {
     this.rowChoosen = row;
-    this._router.navigateByUrl('/vacations/add', { state: { add: false , taskId: this.rowChoosen.id } });
+    this._router.navigateByUrl('/vacation-card', { state: { add: false , taskId: this.rowChoosen.id } });
   }
 
   openAddForm() {
-    this._router.navigateByUrl('/vacations/add', { state: { add: true } });
+    this._router.navigateByUrl('/vacation-card', { state: { add: true } });
   }
 
 }

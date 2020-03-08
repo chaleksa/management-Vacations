@@ -10,26 +10,18 @@ import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
 import { DataService } from './_services/data.service';
 
-import { VacationsComponent } from './vacations/vacations.component';
 import { VacationCardComponent } from './vacations/vacation-card/vacation-card.component';
 import { VacationsListComponent } from './vacations/vacations-list/vacations-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'vacations', pathMatch: 'full' },
-  {
-    path: 'vacations',
-    component: VacationsComponent,
-    children: [
-      { path: '', component: VacationsListComponent},
-      { path: 'add', component: VacationCardComponent }
-    ]
-  }
+  { path: 'vacations', component: VacationsListComponent },
+  { path: 'vacation-card', component: VacationCardComponent }
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    VacationsComponent,
     VacationCardComponent,
     VacationsListComponent
   ],
