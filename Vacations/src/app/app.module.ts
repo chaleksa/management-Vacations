@@ -11,21 +11,17 @@ import { MaterialModule } from './material.module';
 import { DataService } from './_services/data.service';
 
 import { VacationsComponent } from './vacations/vacations.component';
-import { AddVacationsComponent } from './vacations/add-vacations/add-vacations.component';
+import { VacationCardComponent } from './vacations/vacation-card/vacation-card.component';
 import { VacationsListComponent } from './vacations/vacations-list/vacations-list.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: VacationsListComponent
-  },
+  { path: '', redirectTo: 'vacations', pathMatch: 'full' },
   {
     path: 'vacations',
     component: VacationsComponent,
     children: [
       { path: '', component: VacationsListComponent},
-      { path: 'add/:state', component: AddVacationsComponent },
-      { path: 'add/:state/:id', component: AddVacationsComponent }
+      { path: 'add', component: VacationCardComponent }
     ]
   }
 ];
@@ -34,8 +30,8 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     VacationsComponent,
-    AddVacationsComponent,
-    VacationsListComponent 
+    VacationCardComponent,
+    VacationsListComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +40,7 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forRoot(routes),
     FormsModule,
-    FlexLayoutModule 
+    FlexLayoutModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
