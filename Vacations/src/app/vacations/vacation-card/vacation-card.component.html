@@ -129,7 +129,7 @@
         </div>
 
         <div class="submit-buttons">
-          <button mat-raised-button color="warn" *ngIf="!isAddMode" (click)="delete()">
+          <button mat-raised-button color="warn" type="button" *ngIf="!isAddMode" (click)="delete()">
             Remove
           </button>
           <button mat-raised-button color="primary" type="submit" [disabled]="!f.valid" (click)="return()">
