@@ -35,7 +35,11 @@ export class VacationCardComponent implements OnInit {
 
     this.activatedRoute.paramMap
       .pipe(map(() => window.history.state)).subscribe(res => {
-       this.isAddMode = res.add;
+        this.workerName = res.workerName;
+        this.vacationStart = res.start;
+        this.vacationEnd = res.end;
+        this.vacationNotes = res.notes;
+        this.isAddMode = res.add;
 
        if (!res.add) {
         this.taskId = res.taskId;
@@ -43,14 +47,14 @@ export class VacationCardComponent implements OnInit {
       });
 
     if (!this.isAddMode) {
-      this.task = await this.dataService.getTaskById(this.taskId);
-      console.log('task ' + this.task);
-      this.worker = await this.dataService.getWorkerById(this.task.workerId);
-      console.log('worker ' + this.worker);
-      this.workerName = this.worker.name;
-      this.vacationStart = this.task.start;
-      this.vacationEnd = this.task.end;
-      this.vacationNotes = this.task.notes;
+      // this.task = await this.dataService.getTaskById(this.taskId);
+      // console.log('task ' + this.task);
+      // this.worker = await this.dataService.getWorkerById(this.task.workerId);
+      // console.log('worker ' + this.worker);
+      // this.workerName = this.worker.name;
+      // this.vacationStart = this.task.start;
+      // this.vacationEnd = this.task.end;
+      // this.vacationNotes = this.task.notes;
     }
 
     this.workersSource = await this.dataService.getWorkers();

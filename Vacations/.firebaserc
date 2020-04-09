@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "management-1a053": {
+      "hosting": {
+        "AbsentWorkers": [
+          "management-1a053"
+        ]
+      }
+    }
+  }
+}

@@ -13,6 +13,10 @@ import { DataService } from './_services/data.service';
 import { VacationCardComponent } from './vacations/vacation-card/vacation-card.component';
 import { VacationsListComponent } from './vacations/vacations-list/vacations-list.component';
 
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+
 const routes: Routes = [
   { path: '', redirectTo: 'vacations', pathMatch: 'full' },
   { path: 'vacations', component: VacationsListComponent },
@@ -32,7 +36,9 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forRoot(routes),
     FormsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

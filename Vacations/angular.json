@@ -29,7 +29,6 @@
             "styles": [
               "src/styles.sass",
               "src/theme.sass"
-
             ],
             "scripts": []
           },
@@ -98,6 +97,10 @@
               "**/node_modules/**"
             ]
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {}
         }
       }
     },
