@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material';
-import { DataService } from '../../_services/data.service';
+import { DataService } from '../_services/data.service';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-vacation-card',
@@ -34,7 +33,7 @@ export class VacationCardComponent implements OnInit {
   async ngOnInit() {
 
     this.activatedRoute.paramMap
-      .pipe(map(() => window.history.state)).subscribe(res => {
+      .pipe(map(() => window.history.state), take(1)).subscribe(res => {
        this.isAddMode = res.add;
 
        if (!res.add) {
