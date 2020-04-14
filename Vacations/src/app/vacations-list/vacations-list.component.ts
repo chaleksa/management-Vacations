@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { DataService } from '../_services/data.service';
+import { MatPaginator } from '@angular/material';
 import { Router } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
+import 'firebase/firestore';
+import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-vacations-list',
@@ -10,50 +13,37 @@ import { Router } from '@angular/router';
 })
 export class VacationsListComponent implements OnInit {
 
+  items$;
+
   displayedColumns = ['name', 'date', 'linkColumn'];
-  dataSource;
-  workers;
   workersSource;
 
-  rowChoosen = {
-    end: undefined,
-    id: undefined,
-    name: undefined,
-    note: undefined,
-    start: undefined
-  };
+  constructor(private _router: Router, private afs: AngularFirestore) {
+    this.items$ = this.afs.collection('Tasks').snapshotChanges().pipe(
+      map(items => {
+        return items.map((item: any) => {
+          const itemData = item.payload.doc.data();
+          const id = item.payload.doc.id;
+          const name$ = this.afs.collection('Workers').doc(itemData.workerId).valueChanges();
+          return { id, name$, ...itemData };
+        });
+      })
+    );
+  }
 
-  ELEMENT_DATA = [];
-
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-
-  constructor(private dataService: DataService, private _router: Router) { }
-
-  async ngOnInit() {
-    const allocatedTasks = await this.dataService.getAllocationTasks();
-
-    this.workers = await this.dataService.getWorkers();
-
-    allocatedTasks.map(async (task) => {
-      const res = this.workers.filter((rsrs) => task.workerId === rsrs.id);
-
-      await this.ELEMENT_DATA.push({
-        name: res[0].name,
-        start: task.start,
-        end: task.end,
-        note: task.notes,
-        id: task.id
-      });
-    });
-
-    this.dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
-    this.dataSource.paginator = this.paginator;
-    this.workersSource = await this.dataService.getWorkers();
+  ngOnInit() {
   }
 
   onRowClicked(row) {
-    this.rowChoosen = row;
-    this._router.navigateByUrl('/vacation-card', { state: { add: false , taskId: this.rowChoosen.id } });
+    this._router.navigateByUrl('/vacation-card', {
+      state: {
+        add: false,
+        taskId: row.id,
+        workerId: row.workerId,
+        start: row.start,
+        end: row.end
+      }
+    });
   }
 
   openAddForm() {

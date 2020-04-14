@@ -8,10 +8,13 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
-import { DataService } from './_services/data.service';
 
 import { VacationCardComponent } from './vacation-card/vacation-card.component';
 import { VacationsListComponent } from './vacations-list/vacations-list.component';
+
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 const routes: Routes = [
   { path: '', redirectTo: 'vacations', pathMatch: 'full' },
@@ -32,9 +35,11 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forRoot(routes),
     FormsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule
   ],
-  providers: [DataService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
