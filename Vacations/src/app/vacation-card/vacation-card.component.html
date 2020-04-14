@@ -1,7 +1,7 @@
 <form (ngSubmit)="onSubmit(f)" #f="ngForm">
   <div class="add-workers-out">
 
-    <div fxLayoutAlign="center" class="workers-search-block" *ngIf="isAddMode; else worker">
+    <div fxLayoutAlign="center" class="workers-search-block" *ngIf="isAddMode; else editCard">
       <mat-card fxFlex.gt-sm="60%" fxFlex.sm="90%">
 
         <mat-card-subtitle>
@@ -11,9 +11,10 @@
         <mat-card-content fxLayout="row" class="search-input-card-content">
           <mat-icon class="search-input-icon">search</mat-icon>
           <ng-select class="ng-select-worker" 
-          [items]="workersSource" 
+          [items]="workersSource$ | async" 
+          placeholder="Select worker"
           bindLabel="name" 
-          bindValue="id" 
+          bindValue="workerId" 
           ngModel name="workerId" 
           id="workerId" 
           required>
@@ -23,7 +24,7 @@
       </mat-card>
     </div>
 
-    <ng-template #worker>
+    <ng-template #editCard>
       <div fxLayoutAlign="center" class="edit-worker">
         <mat-card fxFlex.gt-sm="60%" fxFlex.sm="90%">
 
@@ -32,7 +33,7 @@
           </mat-card-subtitle>
 
           <mat-card-content fxLayout="row" class="edit-worker-name">
-            {{ workerName }}
+            {{ (workerData$ | async)?.name }}
           </mat-card-content>
 
         </mat-card>
@@ -96,26 +97,6 @@
             </div>
           </mat-card-content>
         </ng-template>
-      </mat-card>
-    </div>
-
-    <div fxLayoutAlign="center" class="add-workers-out">
-      <mat-card fxFlex.gt-sm="60%" fxFlex.sm="90%">
-
-        <mat-card-subtitle>Notes</mat-card-subtitle>
-
-        <mat-card-content>
-          <mat-form-field class="activity-notes-formfiled">
-            <textarea class="activity-notes-textarea" 
-            placeholder="Notes" 
-            matInput 
-            matTextareaAutosize="true"
-            matAutosizeMinRows="2" 
-            [(ngModel)]="vacationNotes"
-            name="notes"></textarea>
-          </mat-form-field>
-        </mat-card-content>
-
       </mat-card>
     </div>
 

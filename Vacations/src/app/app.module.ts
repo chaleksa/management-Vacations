@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
-import { DataService } from './_services/data.service';
 
 import { VacationCardComponent } from './vacation-card/vacation-card.component';
 import { VacationsListComponent } from './vacations-list/vacations-list.component';
@@ -40,7 +39,7 @@ const routes: Routes = [
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule
   ],
-  providers: [DataService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

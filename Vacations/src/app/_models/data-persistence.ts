@@ -1,12 +1,7 @@
 export interface Task {
   start: string;
   end: string;
-  type: string;
-  title?: string;
-  id?: number;
-  workerId?: string;
-  status?: string;
-  notes?: string;
+  workerId: string;
 }
 
 export class Worker {

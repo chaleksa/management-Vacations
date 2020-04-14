@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { DataService } from '../_services/data.service';
+import { MatPaginator } from '@angular/material';
 import { Router } from '@angular/router';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import 'firebase/firestore';
-import { Observable, combineLatest, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -15,54 +13,37 @@ import { map, switchMap } from 'rxjs/operators';
 })
 export class VacationsListComponent implements OnInit {
 
-
-  private tasksCollection: AngularFirestoreCollection;
-  private workersCollection: AngularFirestoreCollection;
-  items;
-  item = [];
+  items$;
 
   displayedColumns = ['name', 'date', 'linkColumn'];
-  dataSource;
-  workers;
   workersSource;
 
-  rowChoosen = {
-    end: undefined,
-    id: undefined,
-    name: undefined,
-    note: undefined,
-    start: undefined
-  };
-
-  ELEMENT_DATA = [];
-
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-
-  constructor(private dataService: DataService, private _router: Router, private afs: AngularFirestore) {
-    this.items = this.afs.collection('Tasks').valueChanges().pipe(
+  constructor(private _router: Router, private afs: AngularFirestore) {
+    this.items$ = this.afs.collection('Tasks').snapshotChanges().pipe(
       map(items => {
         return items.map((item: any) => {
-          this.afs.collection('Workers', ref => ref.where('id', '==', item.workerId))
-          .valueChanges().
-          subscribe((res: any) => item.workerName = res[0].name);
-              return item;
-            });
-        })
+          const itemData = item.payload.doc.data();
+          const id = item.payload.doc.id;
+          const name$ = this.afs.collection('Workers').doc(itemData.workerId).valueChanges();
+          return { id, name$, ...itemData };
+        });
+      })
     );
   }
 
   ngOnInit() {
-    console.log('this.items ' + JSON.stringify(this.items.workers))
-    this.dataSource = new MatTableDataSource<any>(this.items);
-    // this.dataSource.paginator = this.paginator;
-    // this.items.paginator = this.paginator;
-    this.workersSource = this.dataService.getWorkers();
   }
 
   onRowClicked(row) {
-    console.log(row)
-    this.rowChoosen = row;
-    this._router.navigateByUrl('/vacation-card', { state: { add: false, taskId: this.rowChoosen.id, ...row } });
+    this._router.navigateByUrl('/vacation-card', {
+      state: {
+        add: false,
+        taskId: row.id,
+        workerId: row.workerId,
+        start: row.start,
+        end: row.end
+      }
+    });
   }
 
   openAddForm() {

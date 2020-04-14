@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material';
-import { DataService } from '../_services/data.service';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
+import 'firebase/firestore';
 
 @Component({
   selector: 'app-vacation-card',
@@ -13,63 +14,69 @@ import { map, take } from 'rxjs/operators';
 })
 export class VacationCardComponent implements OnInit {
 
-  workersSource;
+  workersSource$;
   isAddMode = false;
   taskId;
-  state;
-  task;
-  worker;
-  workerName;
   vacationStart;
   vacationEnd;
-  vacationNotes;
+  workerId;
+  workerData$;
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  constructor(private dataService: DataService,
-              private activatedRoute: ActivatedRoute,
-              private _location: Location) { }
-
-  async ngOnInit() {
+  constructor(private afs: AngularFirestore, private activatedRoute: ActivatedRoute,
+    private _location: Location) {
 
     this.activatedRoute.paramMap
       .pipe(map(() => window.history.state)).subscribe(res => {
-        this.workerName = res.workerName;
-        this.vacationStart = res.start;
-        this.vacationEnd = res.end;
-        this.vacationNotes = res.notes;
+
         this.isAddMode = res.add;
 
-       if (!res.add) {
+        if (!this.isAddMode) {
         this.taskId = res.taskId;
-       }
+        this.vacationStart = res.start;
+        this.vacationEnd = res.end;
+        this.workerId = res.workerId;
+        }
       });
 
-    if (!this.isAddMode) {
-      // this.task = await this.dataService.getTaskById(this.taskId);
-      // console.log('task ' + this.task);
-      // this.worker = await this.dataService.getWorkerById(this.task.workerId);
-      // console.log('worker ' + this.worker);
-      // this.workerName = this.worker.name;
-      // this.vacationStart = this.task.start;
-      // this.vacationEnd = this.task.end;
-      // this.vacationNotes = this.task.notes;
-    }
+    this.workersSource$ = this.afs.collection('Workers').snapshotChanges().pipe(
+      map(workers => {
+        return workers.map(worker => {
+          const workerData: Object = worker.payload.doc.data();
+          const workerId = worker.payload.doc.id;
+          return { workerId, ...workerData };
+        });
+      })
+    );
 
-    this.workersSource = await this.dataService.getWorkers();
+    if (!this.isAddMode) {
+        this.workerData$ =  this.afs.collection('Workers').doc(this.workerId).valueChanges();
+      }
+  }
+
+  ngOnInit() {
   }
 
   async onSubmit(form: NgForm) {
 
     const newVacationData = { ...form.value };
+    const startDate = typeof(newVacationData.start) === 'object' ? newVacationData.start.format('YYYY-MM-DDTHH:mm:ss') : newVacationData.start;
+    const endDate = typeof(newVacationData.end) === 'object' ? newVacationData.end.format('YYYY-MM-DDTHH:mm:ss') : newVacationData.end;
 
     if (this.isAddMode) {
-      const newVacation = { ...newVacationData, notes: newVacationData.notes,
-        workerId: newVacationData.workerId, status: 'Pending', type: 'Allocation' };
-      const newTaskId = await this.dataService.addTask(newVacation);
+      this.afs.collection('Tasks').doc(this.afs.createId()).set(
+        {
+          start: startDate,
+          end: endDate,
+          workerId: newVacationData.workerId
+        }
+      );
     } else {
-      const updateVacation = await this.dataService.updateVacationDatesAndNotes(newVacationData.notes,
-        newVacationData.start, newVacationData.end, this.taskId);
+      this.afs.collection('Tasks').doc(this.taskId).update({
+        start: startDate,
+          end: endDate
+      });
     }
 
   }
@@ -78,8 +85,7 @@ export class VacationCardComponent implements OnInit {
   }
 
   delete() {
-    this.dataService.deleteTask(this.taskId);
+    this.afs.collection('Tasks').doc(this.taskId).delete();
     this._location.back();
   }
-
 }

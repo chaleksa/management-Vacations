@@ -5,11 +5,11 @@
         <mat-card-title>Vacations</mat-card-title>
       </mat-card-header>
 
-      <table mat-table [dataSource]="items">
+      <table mat-table [dataSource]="items$ | async">
 
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef fxFlex="45%"> Name </mat-header-cell>
-          <mat-cell *matCellDef="let item" fxFlex="45%"> {{ item.workerName }} </mat-cell>
+          <mat-cell *matCellDef="let item" fxFlex="45%"> {{ (item.name$ | async)?.name }} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="date">
@@ -33,9 +33,6 @@
         (click)="onRowClicked(row)">
       </mat-row>
       </table>
-
-      <mat-paginator [pageSize]="5" [pageSizeOptions]="[1, 5, 10, 20]">
-      </mat-paginator>
       
     </mat-card>
   </div>
