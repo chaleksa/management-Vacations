@@ -10,7 +10,7 @@ import { MatSidenavModule,
     MatDatepickerModule,
     MatInputModule,
     MatButtonModule
-        } from '@angular/material';
+} from '@angular/material';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
